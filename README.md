@@ -43,7 +43,8 @@ Additional Notes-
 
 Feel free to explore the live landing page and experience firsthand how RetireEase Financial Solutions can help you plan for a secure retirement.
 
-Visit the Live Landing Page (https://sfrankz.github.io/RetireEase-Financial-Solutions-Landing-Page/)
+Visit the Live Landing Page https://sfrankz.github.io/RetireEase-Financial-Solutions-Landing-Page
+
 
 ---
 
