@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
       content="Discover how RetireEase Financial Solutions can help you plan for a secure retirement. Expert advisors, personalized strategies, and financial security."
     />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <link rel="stylesheet" href="styles.css" />
     <link
       rel="stylesheet"
@@ -104,17 +106,43 @@
     <section id="contact" class="contact">
       <h2>Contact Us</h2>
       <form id="contact-form" method="post">
-        <input type="text" name="name" placeholder="Your Name" required />
-        <input type="email" name="email" placeholder="Your Email" required />
+        <div id="recaptcha-container"></div>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name: (Must Have Atleast 2 Letters)"
+          required
+          pattern="[A-Za-z ]{2,}"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email: (e.g: user@example.com)"
+          required
+          title="Please enter a valid email address"
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+          oninvalid="setCustomValidity('Please enter a valid email address')"
+          oninput="setCustomValidity('')"
+        />
         <input
           type="tel"
           name="phone"
-          placeholder="Your Phone Number"
+          placeholder="Phone Number With Extension: (+)"
           required
-          pattern="[0-9]{10}"
-          title="Please enter a valid 10-digit phone number"
+          pattern="\+\d{10,}"
+          title="Please enter a valid 10-digit phone number with an extension"
         />
-        <button type="submit">Submit</button>
+        <button type="submit" id="submit-button">Submit</button>
+        <div id="sms-validation" class="contact" style="display: none">
+          <h2>Enter the verification code you received via SMS:</h2>
+          <input
+            type="text"
+            id="verification-code"
+            placeholder="Verification Code"
+          />
+          <button id="verify-button">Verify Code</button>
+          <p id="verification-error" class="error"></p>
+        </div>
       </form>
     </section>
 
@@ -133,5 +161,95 @@
         <a href="https://linkedin.com"><i class="fab fa-linkedin"></i></a>
       </div>
     </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyDGbFjhvl_IkHDug8ZLn02dH09aw61KvnA",
+        authDomain: "retireease-50940.firebaseapp.com",
+        projectId: "retireease-50940",
+        storageBucket: "retireease-50940.appspot.com",
+        messagingSenderId: "435608873669",
+        appId: "1:435608873669:web:76e953a94ea16c11039eac",
+      };
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script>
+      document
+        .getElementById("contact-form")
+        .addEventListener("submit", function (e) {
+          const phoneNumberInput = document.getElementsByName("phone")[0];
+          if (!phoneNumberInput.validity.valid) {
+            e.preventDefault();
+            alert(
+              "Please enter a valid phone number with '+' and at least 10 digits."
+            );
+          }
+        });
+
+      function sendSMS(phoneNumber) {
+        const recaptchaContainer = document.getElementById(
+          "recaptcha-container"
+        );
+        recaptchaContainer.innerHTML = "";
+        var appVerifier = new firebase.auth.RecaptchaVerifier(
+          "recaptcha-container"
+        );
+        return firebase
+          .auth()
+          .signInWithPhoneNumber(phoneNumber, appVerifier)
+          .then(function (confirmationResult) {
+            return confirmationResult;
+          })
+          .catch(function (error) {
+            console.error("Error sending SMS:", error);
+            throw error;
+          });
+      }
+
+      function verifySMSCode(confirmationResult, userCode) {
+        return confirmationResult
+          .confirm(userCode)
+          .then((result) => {
+            console.log("Phone number verified:", result.user.phoneNumber);
+            alert("Phone number verified successfully!");
+            document.getElementById("contact-form").reset();
+            document.getElementById("sms-validation").style.display = "none";
+            document.getElementById("recaptcha-container").style.display =
+              "none";
+          })
+          .catch((error) => {
+            console.error("Error verifying code:", error);
+            alert(
+              "Phone number verification failed. Please check and try again."
+            );
+          });
+      }
+
+      document
+        .getElementById("contact-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const phoneNumber = document.getElementsByName("phone")[0].value;
+
+          sendSMS(phoneNumber)
+            .then(function (confirmationResult) {
+              document.getElementById("sms-validation").style.display = "block";
+              const verifyButton = document.getElementById("verify-button");
+              verifyButton.addEventListener("click", function () {
+                const verificationCode =
+                  document.getElementById("verification-code").value;
+                verifySMSCode(confirmationResult, verificationCode);
+              });
+            })
+            .catch(function (error) {
+              console.error("Error sending SMS:", error);
+            });
+        });
+    </script>
   </body>
 </html>

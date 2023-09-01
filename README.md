@@ -1,6 +1,4 @@
- RetireEase Financial Solutions Landing Page
-
-
+RetireEase Financial Solutions Landing Page
 
 Welcome to the RetireEase Financial Solutions Landing Page project! This landing page is designed to showcase the services offered by RetireEase, a trusted partner in retirement planning. The goal of the landing page is to collect leads from potential clients who are interested in securing their financial future through personalized retirement planning.
 
@@ -20,6 +18,19 @@ Design Decisions-
 
 - **Contact Form:** A simple and user-friendly contact form captures essential lead information, providing an efficient way for potential clients to get in touch.
 
+- **SMS Validation Process:**
+  To enhance the security of lead collection and verify the authenticity of potential clients, we have implemented SMS validation for phone numbers in the contact form. Here's how it works:
+
+When a user submits the contact form with their phone number, an SMS verification process is initiated.
+
+A verification code is sent to the provided phone number via SMS.
+
+The user is prompted to enter the verification code they received in the "SMS Validation" section.
+
+Once the code is verified successfully, the user is notified and signed in successfully.
+
+This SMS validation process adds an extra layer of security and ensures that we can reach out to legitimate leads effectively.
+
 Additional Notes-
 
 - **Conversion Rate Optimization:** The call-to-action (CTA) button's design and placement are optimized to encourage users to take action. The button's contrasting color and hover animation prompt visitors to engage with the contact form.
@@ -32,8 +43,7 @@ Additional Notes-
 
 Feel free to explore the live landing page and experience firsthand how RetireEase Financial Solutions can help you plan for a secure retirement.
 
-Visit the Live Landing Page (https://your-landing-page-url.com)
-
+Visit the Live Landing Page (https://sfrankz.github.io/RetireEase-Financial-Solutions-Landing-Page/)
 
 ---
 
